@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { GET_COURSES } from '../graphql/queries';
 import './CourseList.css';
 
 function CourseList() {
   const { loading, error, data } = useQuery(GET_COURSES);
+  const [expandedCourseId, setExpandedCourseId] = useState(null);
+
+  const toggleCourse = (courseId) => {
+    setExpandedCourseId(expandedCourseId === courseId ? null : courseId);
+  };
 
   if (loading) {
     return (
@@ -40,13 +45,29 @@ function CourseList() {
       <h2>Available Courses</h2>
       <div className="courses-grid">
         {courses.map((course) => (
-          <div key={course.id} className="course-card">
+          <div
+            key={course.id}
+            className={`course-card ${expandedCourseId === course.id ? 'expanded' : ''}`}
+            onClick={() => toggleCourse(course.id)}
+            role="button"
+            tabIndex={0}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                toggleCourse(course.id);
+              }
+            }}
+          >
             <div className="course-header">
               <h3>{course.title}</h3>
               <span className={`status-badge ${course.isActive ? 'active' : 'inactive'}`}>
                 {course.isActive ? 'Active' : 'Inactive'}
               </span>
             </div>
+            {expandedCourseId === course.id && course.description && (
+              <div className="course-description">
+                <p>{course.description}</p>
+              </div>
+            )}
             <div className="course-footer">
               <p className="course-date">
                 Created: {new Date(course.createdAt).toLocaleDateString('de-DE', {

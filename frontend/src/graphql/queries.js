@@ -5,6 +5,7 @@ export const GET_COURSES = gql`
     courses {
       id
       title
+      description
       isActive
       createdAt
     }
@@ -16,6 +17,7 @@ export const GET_COURSE = gql`
     course(id: $id) {
       id
       title
+      description
       isActive
       createdAt
     }

@@ -5,7 +5,7 @@ from .models import Course
 class CourseType(DjangoObjectType):
     class Meta:
         model = Course
-        fields = ("id", "title", "is_active", "created_at")
+        fields = ("id", "title", "description", "is_active", "created_at")
 
 class Query(graphene.ObjectType):
     courses = graphene.List(CourseType)
