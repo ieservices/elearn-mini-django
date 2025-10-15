@@ -1,0 +1,13 @@
+image: python:3.12-slim
+
+pipelines:
+  default:
+    - step:
+        name: Lint & Test
+        caches:
+          - pip
+        script:
+          - pip install -r requirements.txt
+          - ruff check .
+          - black --check .
+          - pytest -q
