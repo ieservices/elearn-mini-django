@@ -173,16 +173,73 @@ mypy .
 - Apollo Client
 - GraphQL
 
-## AWS Deployment
+## Deployment Options
 
-The project includes comprehensive Terraform configurations for deploying to AWS.
+The project includes comprehensive Terraform configurations for two deployment options:
 
-### Backend Deployment (AWS ECS Fargate)
+### 1. Local Deployment with Podman Kubernetes
+
+Perfect for local development and testing on your machine.
+
+#### Backend (Podman Kubernetes)
+
+Located in `backend/terraform/podman/`:
+
+- **Infrastructure**: Kubernetes Namespace, PostgreSQL Pod with PVC, Django on ECS-like pods
+- **Features**: Init containers, health checks, automatic migrations, ConfigMaps & Secrets
+- **Cost**: Free (runs locally)
+- **Documentation**: See `backend/terraform/podman/README.md`
+
+Quick start:
+```bash
+# Build backend image
+cd backend
+podman build -t localhost/ieservices-elearn-backend:latest -f terraform/aws/Dockerfile .
+
+# Deploy with Terraform
+cd terraform/podman
+cp terraform.tfvars.example terraform.tfvars
+terraform init
+terraform apply
+
+# Access at http://localhost:30800
+```
+
+#### Frontend (Podman Kubernetes)
+
+Located in `frontend/terraform/podman/`:
+
+- **Infrastructure**: React + Nginx in Pods, custom Nginx config for SPA routing
+- **Features**: Health checks, resource limits, optional HPA
+- **Cost**: Free (runs locally)
+- **Documentation**: See `frontend/terraform/podman/README.md`
+
+Quick start:
+```bash
+# Build frontend image
+cd frontend
+podman build -t localhost/ieservices-elearn-frontend:latest .
+
+# Deploy with Terraform
+cd terraform/podman
+cp terraform.tfvars.example terraform.tfvars
+terraform init
+terraform apply
+
+# Access at http://localhost:30300
+```
+
+### 2. AWS Cloud Deployment
+
+Production-ready cloud deployment with managed services.
+
+#### Backend (AWS ECS Fargate)
 
 Located in `backend/terraform/aws/`:
 
 - **Infrastructure**: VPC, ECS Fargate, RDS PostgreSQL, Application Load Balancer
 - **Features**: Auto-scaling, CloudWatch logging, Multi-AZ deployment
+- **Cost**: ~$40-60/month for dev environment
 - **Documentation**: See `backend/terraform/aws/README.md`
 
 Quick start:
@@ -194,12 +251,13 @@ terraform init
 terraform apply
 ```
 
-### Frontend Deployment (AWS S3 + CloudFront)
+#### Frontend (AWS S3 + CloudFront)
 
 Located in `frontend/terraform/aws/`:
 
 - **Infrastructure**: S3 static hosting, CloudFront CDN, optional Route53
 - **Features**: Global CDN, HTTPS, automatic cache invalidation
+- **Cost**: ~$5-15/month for dev environment
 - **Documentation**: See `frontend/terraform/aws/README.md`
 
 Quick start:
@@ -218,7 +276,18 @@ chmod +x deploy.sh
 ./deploy.sh dev
 ```
 
-For detailed deployment instructions, cost estimates, and troubleshooting, refer to the README files in each terraform/aws directory.
+### Deployment Comparison
+
+| Feature | Podman Kubernetes | AWS Cloud |
+|---------|-------------------|-----------|
+| **Cost** | Free | ~$45-75/month |
+| **Setup** | Local machine | AWS account required |
+| **Database** | PostgreSQL in Pod | RDS PostgreSQL |
+| **Scaling** | Manual/HPA | Auto-scaling |
+| **Availability** | Single machine | Multi-AZ |
+| **Best For** | Development, Testing | Production, Staging |
+
+For detailed deployment instructions, cost estimates, and troubleshooting, refer to the README files in each terraform directory.
 
 ## About ieServices
 

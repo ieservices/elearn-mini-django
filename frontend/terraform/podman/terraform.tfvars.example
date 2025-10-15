@@ -1,0 +1,24 @@
+# ieServices E-Learning Platform - Frontend Podman Kubernetes Configuration Example
+# Copy this file to terraform.tfvars and update with your values
+
+kubeconfig_path    = "~/.kube/config"
+kubernetes_context = "podman"
+namespace          = "ieservices-elearn"
+app_name           = "ieservices-elearn"
+
+# Frontend Configuration
+frontend_image          = "localhost/ieservices-elearn-frontend:latest"
+frontend_replicas       = 1
+frontend_node_port      = 30300
+frontend_cpu_request    = "50m"
+frontend_memory_request = "64Mi"
+frontend_cpu_limit      = "200m"
+frontend_memory_limit   = "128Mi"
+
+# Backend API Configuration
+backend_api_url = "http://localhost:30800"
+
+# Autoscaling Configuration
+enable_autoscaling      = false
+autoscaling_min_replicas = 1
+autoscaling_max_replicas = 5

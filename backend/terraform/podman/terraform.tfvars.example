@@ -1,0 +1,29 @@
+# ieServices E-Learning Platform - Backend Podman Kubernetes Configuration Example
+# Copy this file to terraform.tfvars and update with your values
+
+kubeconfig_path     = "~/.kube/config"
+kubernetes_context  = "podman"
+namespace           = "ieservices-elearn"
+app_name            = "ieservices-elearn"
+environment         = "local"
+
+# Backend Configuration
+backend_image           = "localhost/ieservices-elearn-backend:latest"
+backend_replicas        = 1
+backend_node_port       = 30800
+backend_cpu_request     = "100m"
+backend_memory_request  = "256Mi"
+backend_cpu_limit       = "500m"
+backend_memory_limit    = "512Mi"
+
+# Database Configuration
+db_name                = "elearn"
+db_username            = "elearn_admin"
+db_password            = "elearn_password"
+postgres_storage_size  = "5Gi"
+
+# Application Configuration
+django_secret_key      = "local-dev-secret-key-change-in-production"
+debug_mode             = "1"
+allowed_hosts          = "*"
+cors_allowed_origins   = "http://localhost:3000,http://localhost:30300"
