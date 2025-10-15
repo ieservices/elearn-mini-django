@@ -1,7 +1,10 @@
 import { ApolloClient, InMemoryCache, HttpLink } from '@apollo/client';
 
+// Use environment variable for API URL, fallback to localhost for development
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8010';
+
 const httpLink = new HttpLink({
-  uri: 'http://localhost:8010/graphql',
+  uri: `${API_URL}/graphql`,
   credentials: 'include',
 });
 
